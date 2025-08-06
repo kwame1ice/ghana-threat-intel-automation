@@ -1,0 +1,31 @@
+name: Subdomain Monitor
+
+on:
+  workflow_dispatch:      # Allows manual run
+  schedule:
+    - cron: '0 6 * * *'   # Runs daily at 6 AM UTC
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install requests
+
+    - name: Run script
+      run: python monitor.py
+
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: subdomain-results
+        path: results_*.txt
